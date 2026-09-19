@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useRef, useState, type KeyboardEvent } from "react";
+import { Fragment, memo, useRef, useState, type KeyboardEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -316,6 +316,58 @@ export function ConversationPath({ astrologer }: { astrologer: Astrologer }) {
   );
 }
 
+function VoiceRibbonTrack({
+  testimonials,
+  decorative = false,
+}: {
+  testimonials: Testimonial[];
+  decorative?: boolean;
+}) {
+  const count = Math.max(storyTopics.length, testimonials.length);
+  return (
+    <div className={styles.voiceRibbonTrack} aria-hidden={decorative || undefined}>
+      {Array.from({ length: count }, (_, index) => {
+        const topic = storyTopics[index];
+        const voice = testimonials[index];
+        return (
+          <Fragment key={topic?.label ?? voice?.id ?? index}>
+            {topic ? (
+              <Link
+                href={`/astrologers?search=${encodeURIComponent(topic.search)}`}
+                className={styles.voiceChip}
+                tabIndex={decorative ? -1 : undefined}
+              >
+                <topic.icon size={15} strokeWidth={1.7} aria-hidden="true" />
+                {topic.label}
+              </Link>
+            ) : null}
+            {voice ? (
+              <figure className={styles.voiceQuote}>
+                <blockquote>{voice.text}</blockquote>
+                <figcaption>
+                  {voice.name} · {voice.city}
+                </figcaption>
+              </figure>
+            ) : null}
+          </Fragment>
+        );
+      })}
+    </div>
+  );
+}
+
+function VoiceRibbon({ testimonials }: { testimonials: Testimonial[] }) {
+  return (
+    <section className={styles.voiceRibbon} aria-label="Topics and illustrative voices">
+      <div className={styles.voiceRibbonViewport}>
+        <VoiceRibbonTrack testimonials={testimonials} />
+        <VoiceRibbonTrack testimonials={testimonials} decorative />
+      </div>
+      <p>Illustrative voices from this demo, not actual customer endorsements.</p>
+    </section>
+  );
+}
+
 export const StoryHome = memo(function StoryHome({
   astrologers,
   testimonials,
@@ -329,6 +381,7 @@ export const StoryHome = memo(function StoryHome({
   return (
     <div className={styles.storyHome}>
       <Hero />
+      <VoiceRibbon testimonials={testimonials} />
       <nav className={styles.chapterNav} aria-label="Your ASTRA story">
         <div className="container">
           {[

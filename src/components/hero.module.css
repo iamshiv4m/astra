@@ -262,81 +262,120 @@
   }
 }
 @media (max-width: 600px) {
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: -72px 8% auto;
+    height: 240px;
+    background: radial-gradient(circle, #ffd39155 0%, #f59b6626 38%, transparent 70%);
+    pointer-events: none;
+  }
   .layout {
     grid-template-columns: 1fr;
-    padding-block: 43px 40px;
-    gap: 38px;
+    grid-template-areas:
+      "visual"
+      "copy";
+    padding-block: 4px 14px;
+    gap: 0;
+  }
+  .copy {
+    grid-area: copy;
   }
   .copy h1 {
-    font-size: clamp(2.55rem, 10vw, 3.65rem);
+    font-size: clamp(1.92rem, 7.6vw, 2.35rem);
+    line-height: 1.06;
   }
   .copy > p {
-    font-size: 0.9rem;
-    margin-top: 23px;
+    font-size: 0.84rem;
+    line-height: 1.5;
+    margin-top: 8px;
   }
   .actions {
-    gap: 23px;
-    margin-top: 25px;
+    margin-top: 12px;
+    gap: 8px;
   }
   .actions > a:first-child {
-    font-size: 0.8rem;
+    min-height: 48px;
+    width: 100%;
+    font-size: 0.84rem;
   }
   .secondary {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
   }
   .languageNote {
-    font-size: 0.73rem;
-    margin-top: 24px;
+    font-size: 0.7rem;
+    margin-top: 6px;
+    gap: 8px;
+    align-items: flex-start;
   }
   .languageNote a {
+    min-height: 44px;
     font-size: 0.7rem;
   }
   .visual {
-    width: min(100%, 390px);
-    margin-inline: auto;
-    min-height: 385px;
+    grid-area: visual;
+    display: grid;
+    place-items: center;
+    width: min(100%, 320px);
+    min-height: 220px;
+    margin: 0 auto;
   }
   .chart {
-    width: 310px;
-    max-width: 90%;
-  }
-  .sun {
-    width: 255px;
-    height: 255px;
-    top: 0;
-    right: -10px;
-  }
-  .question {
-    width: 222px;
-    left: 2px;
-    bottom: 0;
-    padding: 18px 20px;
-  }
-  .question strong {
-    font-size: 1rem;
-  }
-  .question > span {
-    font-size: 0.68rem;
+    position: relative;
+    top: auto;
+    right: auto;
+    width: min(64vw, 216px);
+    max-width: none;
+    transform: rotate(-8deg);
   }
   .chart > span {
-    font-size: 0.33rem;
+    display: block;
+    font-size: 0.34rem;
+  }
+  .sun {
+    display: block;
+    width: 176px;
+    height: 176px;
+    top: 8px;
+    right: -18px;
   }
   .chartCaption {
-    bottom: -26px;
-    font-size: 0.56rem;
+    display: block;
+    bottom: 6px;
+    right: 0;
+    font-size: 0.54rem;
   }
   .chartCaption span + span {
-    font-size: 0.52rem;
+    font-size: 0.5rem;
+  }
+  .question {
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 8px;
+    width: min(74%, 220px);
+    min-height: 104px;
+    padding: 12px 14px;
+    transform: rotate(-3deg);
+    box-shadow: 0 14px 28px #10173550;
+  }
+  .question strong {
+    font-size: 0.88rem;
+    margin-top: 6px;
+  }
+  .question > span {
+    font-size: 0.66rem;
+  }
+  .question > span svg {
+    width: 16px;
+  }
+  .question > svg {
+    display: block;
+    right: 12px;
+    bottom: 12px;
   }
   .footer {
-    padding-block: 22px;
-    margin-top: 12px;
-  }
-  .footer > span {
     display: none;
-  }
-  .footer a {
-    font-size: 0.68rem;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -345,74 +384,5 @@
   }
   .question {
     transition: none;
-  }
-}
-@media (max-width: 600px) {
-  .layout {
-    padding-block: 28px 20px;
-    gap: 18px;
-  }
-  .copy h1 {
-    font-size: clamp(2rem, 8.2vw, 2.75rem);
-  }
-  .copy > p {
-    font-size: 0.9rem;
-    line-height: 1.65;
-    margin-top: 16px;
-  }
-  .actions {
-    margin-top: 19px;
-    gap: 18px;
-  }
-  .actions > a:first-child {
-    min-height: 48px;
-  }
-  .languageNote {
-    margin-top: 14px;
-  }
-  .languageNote a {
-    min-height: 44px;
-  }
-  .visual {
-    min-height: 112px;
-    display: block;
-    width: 100%;
-  }
-  .chart {
-    position: absolute;
-    width: 110px;
-    right: 2px;
-    top: 0;
-  }
-  .chart > span,
-  .sun,
-  .chartCaption {
-    display: none;
-  }
-  .question {
-    display: block;
-    transform: none;
-    box-shadow: none;
-    position: relative;
-    left: 0;
-    width: calc(100% - 130px);
-    min-height: 108px;
-    padding: 13px;
-  }
-  .question strong {
-    font-size: 0.84rem;
-    margin-top: 7px;
-  }
-  .question > span {
-    font-size: 0.65rem;
-  }
-  .question > span svg {
-    width: 16px;
-  }
-  .question > svg {
-    display: none;
-  }
-  .footer {
-    display: none;
   }
 }

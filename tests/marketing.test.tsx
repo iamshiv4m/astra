@@ -38,6 +38,24 @@ it("makes the consultation offer and next steps clear", () => {
   expect(screen.getByText(/illustrative kundli/i)).toBeInTheDocument();
 });
 
+it("keeps a moving ribbon of topics and illustrative voices after the hero", () => {
+  const seed = createSeed("2026-09-19");
+  render(
+    <DemoProvider>
+      <StoryHome astrologers={seed.astrologers} testimonials={seed.testimonials} ready />
+    </DemoProvider>
+  );
+  const ribbon = screen.getByRole("region", { name: "Topics and illustrative voices" });
+  expect(within(ribbon).getByRole("link", { name: "Career" })).toHaveAttribute("href", "/astrologers?search=Career");
+  expect(within(ribbon).getByRole("link", { name: "Relationships" })).toHaveAttribute(
+    "href",
+    "/astrologers?search=Relationships"
+  );
+  expect(ribbon).toHaveTextContent(/Priya · Bengaluru/);
+  expect(ribbon).toHaveTextContent(/a calmer way to think/i);
+  expect(ribbon).toHaveTextContent(/illustrative voices/i);
+});
+
 it("connects Indian traditions and a preferred language to matching guides", () => {
   render(<IndiaDiscovery astrologers={createSeed("2026-09-19").astrologers} ready />);
   fireEvent.change(screen.getByRole("combobox", { name: "Consultation language" }), { target: { value: "Tamil" } });

@@ -4,7 +4,7 @@
 
 Modern Indian wellness, not an antique astrology portal. Indigo gives the product depth; saffron and peach provide warmth; crisp white and cool-tinted surfaces make the task screens feel current. Purposeful linear gradients belong on hero regions, selected actions, workspace navigation and summary areas, not every card. Never use gradients as text fills.
 
-The homepage retains its question-to-conversation story, but replaces the generic landscape opening with an original North Indian-style kundli illustration. It is visibly labeled illustrative, never calculated or personal. Warm geometric light and a single restrained chart entrance supply energy without constant animation.
+The homepage retains its question-to-conversation story, but replaces the generic landscape opening with an original North Indian-style kundli illustration. It is visibly labeled illustrative, never calculated or personal. Warm geometric light and a single restrained chart entrance supply energy without constant animation. A thin saffron ribbon under the hero carries topic chips and short illustrative quotes; it pauses on hover or focus and does not sit on the kundli.
 
 ## Typography and shared components
 
@@ -54,7 +54,7 @@ The homepage chapter navigation uses an indigo gradient journey bar, saffron ico
 
 All assets and fonts remain local. No new remote asset dependency is introduced; the kundli is original SVG. Illustrative profiles, verification, reviews and simulated services stay explicitly qualified.
 
-Keyboard focus, dialog escape/restore, arrow-key calendars, pressed-state topics and roving-tabindex consultation tabs remain mandatory. Selection foreground/background changes are atomic so transitions never temporarily destroy contrast. Reduced motion disables the chart entrance. Native scrolling stays intact.
+Keyboard focus, dialog escape/restore, arrow-key calendars, pressed-state topics and roving-tabindex consultation tabs remain mandatory. Selection foreground/background changes are atomic so transitions never temporarily destroy contrast. Reduced motion disables the chart entrance and the voice ribbon marquee. Native scrolling stays intact.
 
 Validate all routes at 375, 390, 430, 768, 1024 and 1440px, eagerly decode all images, and cover desktop/mobile journeys and accessibility. Keep visual review bounded to a batched review and one confirmation.
 
@@ -62,4 +62,4 @@ Validate all routes at 375, 390, 430, 768, 1024 and 1440px, eagerly decode all i
 
 At 600px and below, the homepage is a concise decision path rather than the desktop story stacked vertically. Keep its default document height at or below 4800px for the seeded demo at 375/390/430px widths; the hero stays below 650px and guide discovery starts within 2100px.
 
-Use a small kundli accent, compact profile rows with rating/price/profile links, and short consultation step selectors with one active preview. All four featured guides and language/tradition links remain available. Secondary approach descriptions and three additional testimonials expand on request through labeled buttons with expanded state; desktop keeps the full content visible. Never shrink touch targets or clamp essential booking information to meet the height budget.
+Open with a luminous kundli stage and overlapping question card, then the offer, primary action, and a compact moving ribbon of topics and illustrative voices. Keep compact profile rows with rating/price/profile links, and short consultation step selectors with one active preview. All four featured guides and language/tradition links remain available. Secondary approach descriptions and three additional testimonials expand on request through labeled buttons with expanded state; desktop keeps the full content visible. Never shrink touch targets or clamp essential booking information to meet the height budget.

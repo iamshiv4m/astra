@@ -1,6 +1,95 @@
 .storyHome {
   overflow: clip;
 }
+.voiceRibbon {
+  background: var(--gradient-warm);
+  color: var(--navy);
+  padding: 10px 0 8px;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+}
+.voiceRibbonViewport {
+  display: flex;
+  width: max-content;
+  animation: voiceRibbon 46s linear infinite;
+}
+.voiceRibbon:is(:hover, :focus-within) .voiceRibbonViewport {
+  animation-play-state: paused;
+}
+.voiceRibbonTrack {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-inline: 10px;
+}
+.voiceChip,
+.voiceQuote {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.voiceChip {
+  background: var(--navy);
+  color: var(--gold-light);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.voiceChip:is(:hover, :focus-visible) {
+  background: var(--navy-soft);
+}
+.voiceQuote {
+  margin: 0;
+  max-width: 320px;
+  background: rgb(255 255 255 / 62%);
+  border: 1px solid rgb(135 75 61 / 14%);
+  gap: 12px;
+}
+.voiceQuote blockquote {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.74rem;
+  line-height: 1.35;
+  color: #4d3f4a;
+}
+.voiceQuote figcaption {
+  flex: none;
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+.voiceRibbon > p {
+  margin: 6px 16px 0;
+  text-align: center;
+  font-size: 0.6rem;
+  color: #715152;
+}
+@keyframes voiceRibbon {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .voiceRibbon {
+    mask-image: none;
+    overflow-x: auto;
+  }
+  .voiceRibbonViewport {
+    animation: none;
+    width: max-content;
+  }
+  .voiceRibbonTrack[aria-hidden="true"] {
+    display: none;
+  }
+}
 .chapterNav {
   background: var(--gradient-night);
   color: var(--paper);
@@ -99,6 +188,27 @@
   }
 }
 @media (max-width: 600px) {
+  .voiceRibbon {
+    padding: 7px 0;
+  }
+  .voiceRibbon > p {
+    display: none;
+  }
+  .voiceChip,
+  .voiceQuote {
+    min-height: 40px;
+    padding-inline: 12px;
+  }
+  .voiceChip {
+    font-size: 0.72rem;
+  }
+  .voiceQuote {
+    max-width: 240px;
+    gap: 8px;
+  }
+  .voiceQuote blockquote {
+    font-size: 0.68rem;
+  }
   .chapterNav {
     padding-block: 8px;
   }

@@ -14,6 +14,27 @@ for (const width of [375, 390, 430]) {
     expect(dimensions.height).toBeLessThanOrEqual(4800);
     expect(dimensions.hero).toBeLessThanOrEqual(650);
     expect(dimensions.guides).toBeLessThanOrEqual(2100);
+    const impact = await page.evaluate(() => {
+      const hero = document.querySelector("main section")!;
+      const chart = hero.querySelector("[data-hero-chart] svg")!;
+      const caption = Array.from(hero.querySelectorAll("span")).find(el =>
+        /illustrative kundli/i.test(el.textContent || "")
+      );
+      const chartBox = chart.getBoundingClientRect();
+      const captionBox = caption?.getBoundingClientRect();
+      return {
+        chartWidth: chartBox.width,
+        chartHeight: chartBox.height,
+        chartTop: chartBox.top,
+        captionHeight: captionBox?.height ?? 0,
+      };
+    });
+    expect(impact.chartWidth).toBeGreaterThanOrEqual(200);
+    expect(impact.chartHeight).toBeGreaterThanOrEqual(200);
+    expect(impact.chartTop).toBeLessThan(520);
+    expect(impact.captionHeight).toBeGreaterThan(0);
+    await expect(page.getByRole("region", { name: "Topics and illustrative voices" })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Topics and illustrative voices" }).getByRole("link", { name: "Career" })).toBeVisible();
     await expect(page.locator("#your-guide .astrologer-card")).toHaveCount(4);
     await expect(page.getByRole("link", { name: "Explore Vedic Astrology" })).toBeVisible();
     const more = page.getByRole("button", { name: "Read 3 more stories" });

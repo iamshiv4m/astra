@@ -36,7 +36,7 @@ export function Hero() {
         </div>
         <div className={styles.visual}>
           <div className={styles.sun} aria-hidden="true" />
-          <div className={styles.chart}>
+          <div className={styles.chart} data-hero-chart>
             <KundliArt />
             <span>ROOTED IN TRADITION. OPEN TO POSSIBILITY.</span>
           </div>
