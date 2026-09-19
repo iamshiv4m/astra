@@ -4,6 +4,9 @@
   position: relative;
   overflow: hidden;
 }
+.mobileCopy {
+  display: none;
+}
 .layout {
   display: grid;
   grid-template-columns: 1.12fr 1fr;
@@ -262,6 +265,14 @@
   }
 }
 @media (max-width: 600px) {
+  .desktopCopy,
+  .languageNote,
+  .visual .question {
+    display: none;
+  }
+  .mobileCopy {
+    display: block;
+  }
   .hero::before {
     content: "";
     position: absolute;
@@ -324,13 +335,12 @@
     position: relative;
     top: auto;
     right: auto;
-    width: min(64vw, 216px);
+    width: min(64vw, 200px);
     max-width: none;
     transform: rotate(-8deg);
   }
   .chart > span {
-    display: block;
-    font-size: 0.34rem;
+    display: none;
   }
   .sun {
     display: block;
@@ -341,12 +351,13 @@
   }
   .chartCaption {
     display: block;
-    bottom: 6px;
-    right: 0;
-    font-size: 0.54rem;
+    position: static;
+    text-align: center;
+    margin-block: 6px 12px;
+    font-size: 0.65rem;
   }
   .chartCaption span + span {
-    font-size: 0.5rem;
+    display: none;
   }
   .question {
     display: block;

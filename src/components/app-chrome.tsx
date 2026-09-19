@@ -178,7 +178,7 @@ export function AppChrome({ children }: { children: ReactNode }) {
       )}
       <main id="main-content">{children}</main>
       {publicChrome && (
-        <footer className="site-footer">
+        <footer className={`site-footer ${path === "/" ? "home-footer" : ""}`}>
           <div className="container">
             <div className="footer-top">
               <div className="footer-brand">
@@ -204,7 +204,7 @@ export function AppChrome({ children }: { children: ReactNode }) {
               </p>
               <button
                 className="text-link"
-                style={{ fontWeight: 400, minHeight: 32 }}
+                style={{ fontWeight: 400, minHeight: path === "/" ? 44 : 32 }}
                 onClick={() => setInfo("privacy")}
               >
                 Privacy & demo information

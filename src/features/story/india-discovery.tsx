@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, AudioLines, Compass, Grid2X2, Hash, Layers } from "lucide-react";
 import type { Astrologer } from "@/types/domain";
+import { defaultFilters, filterAstrologers } from "@/features/discovery/filters";
 import styles from "./india-discovery.module.css";
 
 const traditions = [
@@ -33,17 +34,28 @@ const traditions = [
   },
 ];
 
-export function IndiaDiscovery({ astrologers, ready }: { astrologers: Astrologer[]; ready: boolean }) {
+export function IndiaDiscovery({
+  astrologers,
+  ready,
+  topics = [],
+}: {
+  astrologers: Astrologer[];
+  ready: boolean;
+  topics?: { label: string; search: string }[];
+}) {
   const [language, setLanguage] = useState("");
+  const [topic, setTopic] = useState("");
   const [descriptionsOpen, setDescriptionsOpen] = useState(false);
   const languages = [...new Set(astrologers.flatMap(guide => guide.languages))].sort();
   const matching = astrologers.filter(guide => !language || guide.languages.includes(language));
   const languageQuery = new URLSearchParams(language ? { language } : {});
+  const quickMatches = filterAstrologers(astrologers, { ...defaultFilters, search: topic, language });
+  const quickQuery = new URLSearchParams({ ...(topic ? { search: topic } : {}), ...(language ? { language } : {}) });
   return (
     <section className={styles.section} id="your-language">
       <div className="container">
         <div className={styles.heading}>
-          <div>
+          <div className={styles.introduction}>
             <h2>
               Rooted in India.
               <br /> <em>Personal to you.</em>
@@ -52,6 +64,22 @@ export function IndiaDiscovery({ astrologers, ready }: { astrologers: Astrologer
               From kundli conversations to a fresh perspective on everyday life.
               <br /> Explore an approach that feels like you.
             </p>
+          </div>
+          <div className={styles.quickTopics}>
+            <h2>What brings you here?</h2>
+            <div role="group" aria-label="Choose your topic">
+              {topics.map(item => (
+                <button
+                  key={item.search}
+                  type="button"
+                  disabled={!ready}
+                  aria-pressed={topic === item.search}
+                  onClick={() => setTopic(current => current === item.search ? "" : item.search)}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
           </div>
           <div className={styles.languageChoice}>
             <AudioLines size={25} />
@@ -69,6 +97,15 @@ export function IndiaDiscovery({ astrologers, ready }: { astrologers: Astrologer
             </select>
             <span>{ready ? "Apni bhasha. Apni baat." : "Loading your demo guides..."}</span>
           </div>
+          <div className={styles.quickAction} aria-live="polite">
+            {!ready ? <p>Loading your demo guides...</p> : quickMatches.length > 0 ? (
+              <Link className="btn btn-primary" href={`/astrologers${quickQuery.size ? `?${quickQuery}` : ""}`}>
+                Show {quickMatches.length} matching {quickMatches.length === 1 ? "guide" : "guides"} <ArrowRight size={16} />
+              </Link>
+            ) : (
+              <><p>No demo guide matches this topic and language. Try another choice.</p><Link href="/astrologers">Browse all guides <ArrowRight size={16} /></Link></>
+            )}
+          </div>
         </div>
         <button
           className={styles.descriptionToggle}
@@ -77,7 +114,7 @@ export function IndiaDiscovery({ astrologers, ready }: { astrologers: Astrologer
           aria-controls="tradition-choices"
           onClick={() => setDescriptionsOpen(value => !value)}
         >
-          {descriptionsOpen ? "Hide approach details" : "About these approaches"}
+          {descriptionsOpen ? "Hide astrology approaches" : "Explore astrology approaches"}
           <span aria-hidden="true">{descriptionsOpen ? "−" : "+"}</span>
         </button>
         <div id="tradition-choices" className={styles.traditions} data-descriptions={descriptionsOpen}>

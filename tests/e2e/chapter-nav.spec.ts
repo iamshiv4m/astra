@@ -8,6 +8,10 @@ for (const width of [375, 390, 430, 572, 768, 1024, 1440]) {
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
     const nav = page.getByRole("navigation", { name: "Your ASTRA story" });
+    if (width <= 600) {
+      await expect(nav).toBeHidden();
+      return;
+    }
     const links = nav.getByRole("link");
     await expect(links).toHaveCount(4);
     for (const link of await links.all()) {

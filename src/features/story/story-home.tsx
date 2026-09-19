@@ -75,7 +75,7 @@ export function QuestionChapter() {
   const [selected, setSelected] = useState(0);
   const topic = storyTopics[selected];
   return (
-    <section id="your-question" className={styles.questionChapter}>
+    <section className={styles.questionChapter}>
       <div className={`container ${styles.questionLayout}`}>
         <div className={styles.chapterHeading}>
           <span className={styles.chapterNumber}>01 / YOUR QUESTION</span>
@@ -185,14 +185,20 @@ export function ConversationPath({ astrologer }: { astrologer: Astrologer }) {
         <div className={styles.pathHeading}>
           <span className={styles.chapterNumber}>03 / YOUR CONVERSATION</span>
           <h2>
-            A little space.
-            <br /> <em>A meaningful conversation.</em>
+            <span className={styles.desktopOnly}>A little space.<br /> <em>A meaningful conversation.</em></span>
+            <span className={styles.phoneOnly}>How it works</span>
           </h2>
           <p>
             From your first question to your first session,
             <br /> we keep the experience beautifully simple.
           </p>
         </div>
+        <ol className={styles.simpleSteps} aria-label="Your consultation in three steps">
+          <li><strong>Choose</strong><span>A guide who fits your question.</span></li>
+          <li><strong>Book</strong><span>Pick a time and review the price.</span></li>
+          <li><strong>Connect</strong><span>Meet one-to-one over video and chat.</span></li>
+        </ol>
+        <p className={styles.mobileDemoNote}>Demo only. Calls and payments are simulated.</p>
         <div className={styles.pathLayout}>
           <div
             ref={tabs}
@@ -401,16 +407,18 @@ export const StoryHome = memo(function StoryHome({
           ))}
         </div>
       </nav>
-      <QuestionChapter />
-      <IndiaDiscovery astrologers={astrologers} ready={ready} />
+      <div id="your-question">
+        <QuestionChapter />
+        <IndiaDiscovery astrologers={astrologers} ready={ready} topics={storyTopics} />
+      </div>
       <section className={styles.guideSection} id="your-guide">
         <div className="container">
           <div className={styles.guideHeading}>
             <div>
               <span className={styles.chapterNumber}>02 / YOUR GUIDE</span>
               <h2>
-                The right person makes
-                <br /> <em>all the difference.</em>
+                <span className={styles.desktopOnly}>The right person makes<br /> <em>all the difference.</em></span>
+                <span className={styles.phoneOnly}>Meet your guide</span>
               </h2>
             </div>
             <div>
@@ -437,7 +445,7 @@ export const StoryHome = memo(function StoryHome({
             </div>
           </div>
           <p className={styles.demoNote}>
-            Meet our fictional demo guides. Profiles, reviews and verification badges are illustrative.
+            Fictional demo profiles. Ratings and badges are illustrative.
           </p>
         </div>
       </section>
@@ -464,8 +472,8 @@ export const StoryHome = memo(function StoryHome({
           <div className={styles.voicesHeading}>
             <span className={styles.chapterNumber}>04 / YOUR NEXT CHAPTER</span>
             <h2>
-              Not all clarity is loud.
-              <br /> <em>Sometimes, it&apos;s a quiet shift.</em>
+              <span className={styles.desktopOnly}>Not all clarity is loud.<br /> <em>Sometimes, it&apos;s a quiet shift.</em></span>
+              <span className={styles.phoneOnly}>A little clarity</span>
             </h2>
           </div>
           <div className={styles.featuredVoice}>
@@ -481,6 +489,7 @@ export const StoryHome = memo(function StoryHome({
               </p>
             </div>
           </div>
+          <div className={styles.desktopOnly}>
           <MobileDisclosure id="more-client-stories" more="Read 3 more stories" less="Show fewer stories">
             <div className={styles.voiceList}>
               {testimonials.slice(1, 4).map(item => (
@@ -501,8 +510,9 @@ export const StoryHome = memo(function StoryHome({
               ))}
             </div>
           </MobileDisclosure>
+          </div>
           <p className={styles.demoNote}>
-            These stories are illustrative testimonials, not actual customer endorsements.
+            Illustrative story, not an actual customer endorsement.
           </p>
         </div>
       </section>

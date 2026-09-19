@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
-for (const width of [390, 1440]) {
+for (const width of [1440]) {
   test(`story topics connect to matching guides and the preview works at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
@@ -31,7 +31,7 @@ for (const width of [390, 1440]) {
 test("all story choices and consultation preview states stay accessible", async ({ page }) => {
   test.setTimeout(60000);
   const violations: { width: number; state: string; id: string; targets: unknown[] }[] = [];
-  for (const width of [390, 1440]) {
+  for (const width of [1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
     for (const [role, names] of [
@@ -55,7 +55,12 @@ for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
     await page.getByRole("combobox", { name: "Consultation language" }).selectOption("Tamil");
-    await expect(page.getByText("1 Tamil-speaking guide in this demo")).toBeVisible();
+    if (width === 390) {
+      await expect(page.getByRole("link", { name: "Show 1 matching guide", exact: true })).toBeVisible();
+      await page.getByRole("button", { name: "Explore astrology approaches" }).click();
+    } else {
+      await expect(page.getByText("1 Tamil-speaking guide in this demo")).toBeVisible();
+    }
     const accessibility = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
     expect(accessibility.violations.map(item => item.id)).toEqual([]);
     await page.getByRole("link", { name: "Explore Vedic Astrology" }).click();

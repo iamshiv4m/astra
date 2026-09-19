@@ -33,7 +33,7 @@ it("makes the consultation offer and next steps clear", () => {
   expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Your next chapter starts with a conversation.");
   expect(screen.getByRole("link", { name: /Find your astrologer/i })).toHaveAttribute("href", "/astrologers");
   expect(screen.getByRole("link", { name: /How it works/i })).toHaveAttribute("href", "/#how-it-works");
-  expect(screen.getByText(/private astrology consultations/i)).toBeInTheDocument();
+  expect(screen.getByText(/Private astrology consultations for career crossroads/i)).toBeInTheDocument();
   expect(screen.getByText(/Vedic wisdom, modern lives/i)).toBeInTheDocument();
   expect(screen.getByText(/illustrative kundli/i)).toBeInTheDocument();
 });
@@ -75,6 +75,27 @@ it("only offers languages currently supported by the demo guides", () => {
   const guide = createSeed("2026-09-19").astrologers[0];
   render(<IndiaDiscovery astrologers={[{ ...guide, languages: ["Hindi"] }]} ready />);
   expect(screen.getAllByRole("option").map(option => option.textContent)).toEqual(["Any language", "Hindi"]);
+});
+
+it("combines mobile topic and language choices and lets a topic be deselected", () => {
+  const astrologers = createSeed("2026-09-19").astrologers;
+  render(<IndiaDiscovery astrologers={astrologers} ready topics={storyTopics} />);
+  fireEvent.change(screen.getByRole("combobox", { name: "Consultation language" }), { target: { value: "Hindi" } });
+  fireEvent.click(screen.getByRole("button", { name: "Relationships" }));
+  const count = filterAstrologers(astrologers, { ...defaultFilters, search: "Relationships", language: "Hindi" }).length;
+  expect(screen.getByRole("link", { name: `Show ${count} matching ${count === 1 ? "guide" : "guides"}` }))
+    .toHaveAttribute("href", "/astrologers?search=Relationships&language=Hindi");
+  fireEvent.click(screen.getByRole("button", { name: "Relationships" }));
+  expect(screen.getByRole("link", { name: /Show \d+ matching guides?/ })).toHaveAttribute("href", "/astrologers?language=Hindi");
+});
+
+it("explains empty mobile matches instead of sending users to an unrelated result", () => {
+  const guide = createSeed("2026-09-19").astrologers[0];
+  render(<IndiaDiscovery astrologers={[{ ...guide, expertise: ["Career"], specialty: "Vedic Astrology" }]} ready topics={storyTopics} />);
+  fireEvent.click(screen.getByRole("button", { name: "Family" }));
+  expect(screen.getByText(/No demo guide matches this topic and language/)).toBeInTheDocument();
+  expect(screen.queryByRole("link", { name: /Show \d+ matching guides?/ })).not.toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "Browse all guides" })).toHaveAttribute("href", "/astrologers");
 });
 
 it("does not accept a language choice until the demo is hydrated", () => {

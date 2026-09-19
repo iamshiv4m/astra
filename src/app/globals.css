@@ -584,6 +584,40 @@ input[type="radio"] {
 .footer-bottom p {
   max-width: 70ch;
 }
+@media (max-width: 600px) {
+  .site-footer.home-footer {
+    padding-block: 24px 70px;
+  }
+  .home-footer .footer-top {
+    gap: 16px;
+    padding-bottom: 16px;
+  }
+  .home-footer .footer-brand p {
+    display: none;
+  }
+  .home-footer .footer-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 16px;
+    font-size: .8rem;
+  }
+  .home-footer .footer-links > * {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .home-footer .footer-links button {
+    justify-content: flex-start;
+    padding: 0;
+  }
+  .home-footer .footer-bottom {
+    gap: 8px;
+    padding-top: 14px;
+  }
+  .home-footer .footer-bottom p {
+    font-size: .72rem;
+  }
+}
 .home-section {
   padding-block: 86px;
 }

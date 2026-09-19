@@ -12,10 +12,11 @@ export function Hero() {
             Your next chapter
             <br /> starts with a<br /> <em>conversation.</em>
           </h1>
-          <p>
+          <p className={styles.desktopCopy}>
             Vedic wisdom, modern lives. Private astrology consultations for career crossroads, relationships, and
             finding your own way.
           </p>
+          <p className={styles.mobileCopy}>Private astrology consultations for career, relationships and you.</p>
           <div className={styles.actions}>
             <Link href="/astrologers" className="btn btn-gold">
               Find your astrologer <ArrowRight size={18} />

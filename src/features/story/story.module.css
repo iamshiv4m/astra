@@ -1,6 +1,67 @@
 .storyHome {
   overflow: clip;
 }
+.phoneOnly,
+.simpleSteps,
+.mobileDemoNote {
+  display: none;
+}
+@media (max-width: 600px) {
+  .storyHome .desktopOnly,
+  .storyHome .chapterNav,
+  .storyHome .voiceRibbon,
+  .storyHome .questionChapter,
+  .storyHome .trustRibbon,
+  .storyHome .pathLayout,
+  .storyHome .pathCta {
+    display: none;
+  }
+  .phoneOnly {
+    display: inline;
+  }
+  .simpleSteps {
+    display: grid;
+    gap: 18px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: step;
+  }
+  .simpleSteps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    column-gap: 12px;
+  }
+  .simpleSteps li::before {
+    content: counter(step);
+    color: var(--accent);
+    font-weight: 700;
+    grid-row: span 2;
+  }
+  .simpleSteps strong {
+    font-size: .95rem;
+  }
+  .simpleSteps span {
+    font-size: .85rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .mobileDemoNote {
+    display: block;
+    font-size: .75rem;
+    color: var(--muted);
+    margin-top: 20px;
+  }
+  .storyHome .ending {
+    padding-block: 20px;
+  }
+  .storyHome .ending h2,
+  .storyHome .ending p,
+  .storyHome .endingSun {
+    display: none;
+  }
+}
 .voiceRibbon {
   background: var(--gradient-warm);
   color: var(--navy);
