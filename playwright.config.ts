@@ -9,5 +9,10 @@ export default defineConfig({
   reporter: [["list"]],
   use: { baseURL: "http://localhost:3000", trace: "retain-on-failure", screenshot: "only-on-failure" },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
-  webServer: { command: "npm run dev -- --webpack", url: "http://localhost:3000", reuseExistingServer: true, timeout: 120000 },
+  webServer: {
+    command: "npm run dev -- --webpack",
+    url: "http://localhost:3000",
+    reuseExistingServer: true,
+    timeout: 120000,
+  },
 });

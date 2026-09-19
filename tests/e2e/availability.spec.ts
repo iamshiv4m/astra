@@ -12,7 +12,7 @@ test("astrologer schedule edits change client-bookable slots and persist", async
   const target = future.toISOString().slice(0, 10);
   await page.goto("/astrologers/ananya-sharma");
   await expect(page.locator(".availability-calendar")).toBeVisible();
-  while (await page.locator(`button[data-date="${target}"]`).count() === 0) {
+  while ((await page.locator(`button[data-date="${target}"]`).count()) === 0) {
     await page.getByRole("button", { name: "Next month", exact: true }).click();
   }
   await page.locator(`button[data-date="${target}"]`).click();
@@ -28,7 +28,7 @@ test("astrologer schedule edits change client-bookable slots and persist", async
 
   await page.goto("/astrologers/ananya-sharma");
   await expect(page.locator(".availability-calendar")).toBeVisible();
-  while (await page.locator(`button[data-date="${target}"]`).count() === 0) {
+  while ((await page.locator(`button[data-date="${target}"]`).count()) === 0) {
     await page.getByRole("button", { name: "Next month", exact: true }).click();
   }
   await page.locator(`button[data-date="${target}"]`).click();
@@ -36,7 +36,7 @@ test("astrologer schedule edits change client-bookable slots and persist", async
   await expect(page.getByRole("button", { name: /^9:30 am/i })).toBeEnabled();
   await page.reload();
   await expect(page.locator(".availability-calendar")).toBeVisible();
-  while (await page.locator(`button[data-date="${target}"]`).count() === 0) {
+  while ((await page.locator(`button[data-date="${target}"]`).count()) === 0) {
     await page.getByRole("button", { name: "Next month", exact: true }).click();
   }
   await page.locator(`button[data-date="${target}"]`).click();

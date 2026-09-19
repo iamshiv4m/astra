@@ -13,12 +13,25 @@ export function formatElapsed(seconds: number): string {
     ? `${Math.floor(minutes / 60)}:${String(minutes % 60).padStart(2, "0")}:${remaining}`
     : `${String(minutes).padStart(2, "0")}:${remaining}`;
 }
-export function getSessionAccess(booking: Booking, clientId: string | null, astrologerId: string | null, now: number): { authorized: boolean; canJoin: boolean; roles: Role[] } {
+export function getSessionAccess(
+  booking: Booking,
+  clientId: string | null,
+  astrologerId: string | null,
+  now: number
+): { authorized: boolean; canJoin: boolean; roles: Role[] } {
   const roles: Role[] = [];
   if (clientId === booking.clientId) roles.push("client");
   if (astrologerId === booking.astrologerId) roles.push("astrologer");
   const authorized = roles.length > 0;
-  return { authorized, roles, canJoin: authorized && booking.status !== "completed" && now >= Date.parse(booking.start) - 600_000 && now < Date.parse(booking.end) };
+  return {
+    authorized,
+    roles,
+    canJoin:
+      authorized &&
+      booking.status !== "completed" &&
+      now >= Date.parse(booking.start) - 600_000 &&
+      now < Date.parse(booking.end),
+  };
 }
 export function nextDemoStatus(status: CallStatus, role: Role): CallStatus {
   if (status === "waiting") return role === "client" ? "astrologer-joined" : "client-joined";

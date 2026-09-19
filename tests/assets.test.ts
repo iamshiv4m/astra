@@ -14,7 +14,14 @@ describe("bundled visual assets", () => {
     }
   });
   it("bundles story photography and licensed fonts instead of remote runtime dependencies", () => {
-    for (const file of ["story/dawn.jpg", "story/perspective.jpg", "fonts/gloock.ttf", "fonts/manrope.ttf", "fonts/gloock-license.txt", "fonts/manrope-license.txt"]) {
+    for (const file of [
+      "story/dawn.jpg",
+      "story/perspective.jpg",
+      "fonts/gloock.ttf",
+      "fonts/manrope.ttf",
+      "fonts/gloock-license.txt",
+      "fonts/manrope-license.txt",
+    ]) {
       expect(readFileSync(resolve("public", file)).length, file).toBeGreaterThan(500);
     }
   });

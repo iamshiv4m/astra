@@ -3,11 +3,24 @@ import AxeBuilder from "@axe-core/playwright";
 import type { DemoState } from "../../src/types/domain";
 
 const routes = [
-  "/", "/astrologers", "/astrologers/ananya-sharma", "/login", "/signup",
-  "/dashboard", "/dashboard/bookings", "/dashboard/bookings/booking-9", "/dashboard/profile",
-  "/booking/ananya-sharma", "/session/session-9?demo=1", "/astrologer/login",
-  "/astrologer/dashboard", "/astrologer/availability", "/astrologer/sessions",
-  "/astrologer/sessions?view=clients", "/astrologer/profile", "/tech-stack",
+  "/",
+  "/astrologers",
+  "/astrologers/ananya-sharma",
+  "/login",
+  "/signup",
+  "/dashboard",
+  "/dashboard/bookings",
+  "/dashboard/bookings/booking-9",
+  "/dashboard/profile",
+  "/booking/ananya-sharma",
+  "/session/session-9?demo=1",
+  "/astrologer/login",
+  "/astrologer/dashboard",
+  "/astrologer/availability",
+  "/astrologer/sessions",
+  "/astrologer/sessions?view=clients",
+  "/astrologer/profile",
+  "/tech-stack",
 ];
 
 async function enterBothWorkspaces(page: Page) {
@@ -27,7 +40,10 @@ for (const width of [375, 390, 430, 768, 1024, 1440]) {
     const errors: string[] = [];
     page.on("pageerror", error => errors.push(error.message));
     page.on("response", response => {
-      if (["image", "font", "stylesheet", "script"].includes(response.request().resourceType()) && response.status() >= 400) {
+      if (
+        ["image", "font", "stylesheet", "script"].includes(response.request().resourceType()) &&
+        response.status() >= 400
+      ) {
         errors.push(`Broken asset ${response.status()}: ${response.url()}`);
       }
     });
@@ -40,22 +56,32 @@ for (const width of [375, 390, 430, 768, 1024, 1440]) {
       await page.evaluate(() => document.fonts.ready);
       const brokenImages = await page.evaluate(async () => {
         const images = Array.from(document.images);
-        images.forEach(image => { image.loading = "eager"; });
-        const results = await Promise.all(images.map(async image => {
-          try {
-            await image.decode();
-            return image.naturalWidth > 0 ? null : image.currentSrc;
-          } catch {
-            return image.currentSrc || image.src;
-          }
-        }));
+        images.forEach(image => {
+          image.loading = "eager";
+        });
+        const results = await Promise.all(
+          images.map(async image => {
+            try {
+              await image.decode();
+              return image.naturalWidth > 0 ? null : image.currentSrc;
+            } catch {
+              return image.currentSrc || image.src;
+            }
+          })
+        );
         return results.filter(Boolean);
       });
       expect(brokenImages, `Every image must decode on ${route} at ${width}px`).toEqual([]);
-      const dimensions = await page.evaluate(() => ({ actual: document.documentElement.scrollWidth, viewport: window.innerWidth }));
+      const dimensions = await page.evaluate(() => ({
+        actual: document.documentElement.scrollWidth,
+        viewport: window.innerWidth,
+      }));
       expect(dimensions.actual, `${route} overflows at ${width}px`).toBeLessThanOrEqual(dimensions.viewport + 1);
       await expect(page.locator('a[href="#"]')).toHaveCount(0);
-      await page.screenshot({ path: testInfo.outputPath(`${String(index).padStart(2, "0")}-${route.replace(/\W+/g, "-")}.png`), fullPage: true });
+      await page.screenshot({
+        path: testInfo.outputPath(`${String(index).padStart(2, "0")}-${route.replace(/\W+/g, "-")}.png`),
+        fullPage: true,
+      });
     }
     expect(errors).toEqual([]);
   });
@@ -122,7 +148,17 @@ test("old portrait references migrate without resetting local edits", async ({ p
   await expect(page.getByRole("button", { name: "Demo controls", exact: true })).toBeEnabled();
   const saved = await page.evaluate(() => {
     const data = JSON.parse(localStorage.getItem("astra.demo.v1")!) as DemoState;
-    return { portrait: data.astrologers[0].image, custom: data.astrologers[1].image, name: data.clients.find(client => client.id === "shivam")?.name, bookings: data.bookings.length };
+    return {
+      portrait: data.astrologers[0].image,
+      custom: data.astrologers[1].image,
+      name: data.clients.find(client => client.id === "shivam")?.name,
+      bookings: data.bookings.length,
+    };
   });
-  expect(saved).toEqual({ portrait: "/portraits/1.jpg", custom: "/portraits/10.jpg", name: "Preserved Demo Edit", bookings: 10 });
+  expect(saved).toEqual({
+    portrait: "/portraits/1.jpg",
+    custom: "/portraits/10.jpg",
+    name: "Preserved Demo Edit",
+    bookings: 10,
+  });
 });

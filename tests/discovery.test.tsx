@@ -9,39 +9,88 @@ import { DiscoveryScreen } from "@/features/discovery/discovery-screen";
 import { AuthScreen } from "@/features/auth/auth-screen";
 import { readFileSync } from "node:fs";
 
-const mock = vi.hoisted(() => ({ snapshot: {} as Record<string, unknown>, push: vi.fn(), params: new URLSearchParams() }));
+const mock = vi.hoisted(() => ({
+  snapshot: {} as Record<string, unknown>,
+  push: vi.fn(),
+  params: new URLSearchParams(),
+}));
 vi.mock("@/lib/store", () => ({ useDemo: () => mock.snapshot }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: mock.push }), useSearchParams: () => mock.params }));
 
 const advisor = (patch: Partial<Astrologer>): Astrologer => ({
-  id: "ananya-sharma", name: "Ananya Sharma", title: "Vedic astrologer", specialty: "Vedic",
-  expertise: ["Career", "Relationships"], experience: 12, languages: ["English", "Hindi"],
-  rating: 4.9, consultations: 2400, gender: "Female", image: "", color: "", bio: "", style: "",
-  prices: { 30: 149900, 45: 199900, 60: 249900 }, featured: true, reviews: [], ...patch,
+  id: "ananya-sharma",
+  name: "Ananya Sharma",
+  title: "Vedic astrologer",
+  specialty: "Vedic",
+  expertise: ["Career", "Relationships"],
+  experience: 12,
+  languages: ["English", "Hindi"],
+  rating: 4.9,
+  consultations: 2400,
+  gender: "Female",
+  image: "",
+  color: "",
+  bio: "",
+  style: "",
+  prices: { 30: 149900, 45: 199900, 60: 249900 },
+  featured: true,
+  reviews: [],
+  ...patch,
 });
 const advisors = [
   advisor({}),
-  advisor({ id: "meera", name: "Meera", specialty: "Tarot", experience: 6, rating: 4.7, languages: ["English"], prices: { 30: 99900, 45: 139900, 60: 189900 }, featured: false }),
-  advisor({ id: "raghav", name: "Raghav", gender: "Male", experience: 18, rating: 4.8, languages: ["Hindi"], featured: false }),
+  advisor({
+    id: "meera",
+    name: "Meera",
+    specialty: "Tarot",
+    experience: 6,
+    rating: 4.7,
+    languages: ["English"],
+    prices: { 30: 99900, 45: 139900, 60: 189900 },
+    featured: false,
+  }),
+  advisor({
+    id: "raghav",
+    name: "Raghav",
+    gender: "Male",
+    experience: 18,
+    rating: 4.8,
+    languages: ["Hindi"],
+    featured: false,
+  }),
 ];
 
 describe("public supporting text contrast", () => {
   it.each([
-    ["discovery/discovery", "filterNote"], ["discovery/discovery", "sampleNotice"], ["discovery/discovery", "helpStrip p"],
-    ["discovery/profile", "sessionDetails p"], ["discovery/profile", "reviewNotice"], ["discovery/profile", "reviewTopic"],
-    ["discovery/profile", "disclaimer"], ["discovery/profile", "bookingHeader p"], ["discovery/profile", "calendarLabel span"],
-    ["discovery/profile", "slotHint"], ["discovery/profile", "total small"], ["discovery/profile", "bookingFootnote"],
-    ["discovery/profile", "mobileCta small"], ["auth/auth", "divider"], ["auth/auth", "privacy"],
+    ["discovery/discovery", "filterNote"],
+    ["discovery/discovery", "sampleNotice"],
+    ["discovery/discovery", "helpStrip p"],
+    ["discovery/profile", "sessionDetails p"],
+    ["discovery/profile", "reviewNotice"],
+    ["discovery/profile", "reviewTopic"],
+    ["discovery/profile", "disclaimer"],
+    ["discovery/profile", "bookingHeader p"],
+    ["discovery/profile", "calendarLabel span"],
+    ["discovery/profile", "slotHint"],
+    ["discovery/profile", "total small"],
+    ["discovery/profile", "bookingFootnote"],
+    ["discovery/profile", "mobileCta small"],
+    ["auth/auth", "divider"],
+    ["auth/auth", "privacy"],
   ])("%s .%s meets AA contrast on the cream surface", (module, selector) => {
     const css = readFileSync(`src/features/${module}.module.css`, "utf8");
     const globalCss = readFileSync("src/app/globals.css", "utf8");
     const color = css.match(new RegExp(`\\.${selector}\\s*\\{[^}]*color:\\s*([^;]+)`))![1].trim();
-    const resolve = (value: string) => value.startsWith("var(") ? globalCss.match(new RegExp(`${value.slice(4, -1)}:\\s*(#[a-fA-F0-9]+)`))![1] : value;
+    const resolve = (value: string) =>
+      value.startsWith("var(") ? globalCss.match(new RegExp(`${value.slice(4, -1)}:\\s*(#[a-fA-F0-9]+)`))![1] : value;
     const luminance = (hex: string) => {
-      const channels = hex.slice(1).match(/.{2}/g)!.map(value => {
-        const channel = parseInt(value, 16) / 255;
-        return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
-      });
+      const channels = hex
+        .slice(1)
+        .match(/.{2}/g)!
+        .map(value => {
+          const channel = parseInt(value, 16) / 255;
+          return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+        });
       return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
     };
     const background = luminance(resolve("var(--cream)"));
@@ -52,11 +101,22 @@ describe("public supporting text contrast", () => {
 
 describe("advisor discovery", () => {
   it("searches name and expertise without case or surrounding-space sensitivity", () => {
-    expect(filterAstrologers(advisors, { ...defaultFilters, search: " ANANYA " }).map(a => a.id)).toEqual(["ananya-sharma"]);
+    expect(filterAstrologers(advisors, { ...defaultFilters, search: " ANANYA " }).map(a => a.id)).toEqual([
+      "ananya-sharma",
+    ]);
     expect(filterAstrologers(advisors, { ...defaultFilters, search: "career" })).toHaveLength(3);
   });
   it("combines all seven filter categories", () => {
-    const filters = { ...defaultFilters, specialty: "Vedic", experience: "10", language: "Hindi", price: "1500", rating: "4.8", availability: "today", gender: "Female" };
+    const filters = {
+      ...defaultFilters,
+      specialty: "Vedic",
+      experience: "10",
+      language: "Hindi",
+      price: "1500",
+      rating: "4.8",
+      availability: "today",
+      gender: "Female",
+    };
     expect(filterAstrologers(advisors, filters, new Set(["ananya-sharma"]))).toEqual([advisors[0]]);
     expect(filterAstrologers(advisors, filters, new Set())).toEqual([]);
   });
@@ -92,7 +152,12 @@ describe("demo identity", () => {
 
   describe("discovery and auth screens", () => {
     beforeEach(() => {
-      mock.snapshot = { state: createSeed("2026-09-19"), ready: true, error: null, actions: { login: vi.fn(), setScenario: vi.fn(), clearError: vi.fn() } };
+      mock.snapshot = {
+        state: createSeed("2026-09-19"),
+        ready: true,
+        error: null,
+        actions: { login: vi.fn(), setScenario: vi.fn(), clearError: vi.fn() },
+      };
       mock.push.mockReset();
       mock.params = new URLSearchParams();
     });
@@ -116,11 +181,23 @@ describe("demo identity", () => {
       expect(screen.getByRole("link", { name: "View Ananya Sharma's profile" })).toBeInTheDocument();
     });
     it("leaves the main landmark to AppChrome", () => {
-      const view = render(<main id="main-content"><AuthScreen /></main>);
+      const view = render(
+        <main id="main-content">
+          <AuthScreen />
+        </main>
+      );
       expect(screen.getAllByRole("main")).toHaveLength(1);
-      view.rerender(<main id="main-content"><AstrologerProfile id="ananya-sharma" /></main>);
+      view.rerender(
+        <main id="main-content">
+          <AstrologerProfile id="ananya-sharma" />
+        </main>
+      );
       expect(screen.getAllByRole("main")).toHaveLength(1);
-      view.rerender(<main id="main-content"><DiscoveryScreen /></main>);
+      view.rerender(
+        <main id="main-content">
+          <DiscoveryScreen />
+        </main>
+      );
       expect(screen.getAllByRole("main")).toHaveLength(1);
     });
     it("starts the calendar at the hydrated demo date, not the server placeholder", () => {
@@ -134,7 +211,11 @@ describe("demo identity", () => {
       const state = createSeed("2026-09-19");
       const slot = getSlots(state, "ananya-sharma", state.seedDate, 30).find(item => item.available)!;
       render(<AstrologerProfile id="ananya-sharma" />);
-      const label = new Intl.DateTimeFormat("en-IN", { hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" }).format(new Date(slot.start));
+      const label = new Intl.DateTimeFormat("en-IN", {
+        hour: "numeric",
+        minute: "2-digit",
+        timeZone: "Asia/Kolkata",
+      }).format(new Date(slot.start));
       fireEvent.click(screen.getByRole("button", { name: label }));
       const link = screen.getByRole("link", { name: "Book consultation" });
       const href = new URL(link.getAttribute("href")!, "https://astra.example");
@@ -150,7 +231,9 @@ describe("demo identity", () => {
       schedule.blocks.push({ date: state.seedDate, start: "00:00", end: "23:59" });
       mock.snapshot = { ...mock.snapshot, state };
       render(<AstrologerProfile id="ananya-sharma" />);
-      const unavailable = screen.getAllByRole("button").filter(button => button.getAttribute("aria-label")?.includes(" - "));
+      const unavailable = screen
+        .getAllByRole("button")
+        .filter(button => button.getAttribute("aria-label")?.includes(" - "));
       expect(unavailable.length).toBeGreaterThan(0);
       expect(unavailable.every(button => button.hasAttribute("disabled"))).toBe(true);
     });
@@ -159,12 +242,23 @@ describe("demo identity", () => {
       render(<AuthScreen />);
       fireEvent.click(screen.getByRole("button", { name: "Sign in to demo" }));
       expect(screen.getByRole("alert")).toHaveTextContent("Enter a valid email address");
-      fireEvent.change(screen.getByRole("textbox", { name: /Email address/ }), { target: { value: "hello@example.com" } });
+      fireEvent.change(screen.getByRole("textbox", { name: /Email address/ }), {
+        target: { value: "hello@example.com" },
+      });
       fireEvent.click(screen.getByRole("button", { name: "Sign in to demo" }));
       await waitFor(() => expect(mock.push).toHaveBeenCalledWith("/booking/ananya-sharma?duration=45"));
     });
   });
-  it.each(["https://example.com", "//example.com", "/\\example.com", "/booking-evil", "/dashboard/../../login", "/dashboard/%2e%2e/login", "/dashboard%2f..%2flogin", "javascript:alert(1)"])("rejects unsafe return destination %s", path => {
+  it.each([
+    "https://example.com",
+    "//example.com",
+    "/\\example.com",
+    "/booking-evil",
+    "/dashboard/../../login",
+    "/dashboard/%2e%2e/login",
+    "/dashboard%2f..%2flogin",
+    "javascript:alert(1)",
+  ])("rejects unsafe return destination %s", path => {
     expect(safeDestination(path)).toBe("/dashboard");
   });
   it("validates contact details without requesting a password or OTP", () => {
@@ -172,6 +266,8 @@ describe("demo identity", () => {
     expect(validateIdentity({ contact: "hello@example.com", mode: "email" })).toBeNull();
     expect(validateIdentity({ contact: "+91 98765 43210", mode: "mobile" })).toBeNull();
     expect(validateIdentity({ contact: "123", mode: "mobile" })).toBe("Enter a valid 10-digit Indian mobile number.");
-    expect(validateIdentity({ name: "", contact: "hello@example.com", mode: "email", signup: true })).toBe("Enter your name (at least 2 characters).");
+    expect(validateIdentity({ name: "", contact: "hello@example.com", mode: "email", signup: true })).toBe(
+      "Enter your name (at least 2 characters)."
+    );
   });
 });

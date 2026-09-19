@@ -16,20 +16,20 @@ Use clear white advisor surfaces, generous profile images, 13px primary-action c
 
 Canonical definitions are in `src/app/globals.css`.
 
-| Role | Value |
-|---|---|
-| Indigo | `#202657` |
-| Night | `#111638` |
-| Soft indigo | `#343e80` |
-| Accent | `#4b55b5` |
-| Saffron | `#bb631b` |
-| Light saffron | `#ffd391` |
-| Peach | `#ffd5b8` |
-| Canvas | `#f7f8fc` |
-| Paper | `#ffffff` |
-| Ink | `#1d2442` |
+| Role            | Value     |
+| --------------- | --------- |
+| Indigo          | `#202657` |
+| Night           | `#111638` |
+| Soft indigo     | `#343e80` |
+| Accent          | `#4b55b5` |
+| Saffron         | `#bb631b` |
+| Light saffron   | `#ffd391` |
+| Peach           | `#ffd5b8` |
+| Canvas          | `#f7f8fc` |
+| Paper           | `#ffffff` |
+| Ink             | `#1d2442` |
 | Supporting text | `#5d657a` |
-| Border | `#e0e5ef` |
+| Border          | `#e0e5ef` |
 
 Shared gradients: `--gradient-night` for light-on-dark regions; `--gradient-warm` for dark-on-warm regions; `--gradient-surface` for subtly tinted light sections.
 
@@ -48,6 +48,8 @@ Topics include career transitions, competitive exams, marriage conversations and
 - Consultation: dark stage, clear simulated call controls, white chat and an accessible mobile sheet.
 - Architecture: contemporary layer cards with the implemented/proposed distinction preserved.
 
+The homepage chapter navigation uses an indigo gradient journey bar, saffron icon medallions and numbered landmarks. Warm hover/focus surfaces emphasize clickable destinations without pretending a chapter is selected. Keep the native section anchors, four-column desktop layout and compact two-column phone layout; decorative icons and numbers stay out of link names.
+
 ## Integrity and accessibility
 
 All assets and fonts remain local. No new remote asset dependency is introduced; the kundli is original SVG. Illustrative profiles, verification, reviews and simulated services stay explicitly qualified.
@@ -55,3 +57,9 @@ All assets and fonts remain local. No new remote asset dependency is introduced;
 Keyboard focus, dialog escape/restore, arrow-key calendars, pressed-state topics and roving-tabindex consultation tabs remain mandatory. Selection foreground/background changes are atomic so transitions never temporarily destroy contrast. Reduced motion disables the chart entrance. Native scrolling stays intact.
 
 Validate all routes at 375, 390, 430, 768, 1024 and 1440px, eagerly decode all images, and cover desktop/mobile journeys and accessibility. Keep visual review bounded to a batched review and one confirmation.
+
+## Compact phone journey
+
+At 600px and below, the homepage is a concise decision path rather than the desktop story stacked vertically. Keep its default document height at or below 4800px for the seeded demo at 375/390/430px widths; the hero stays below 650px and guide discovery starts within 2100px.
+
+Use a small kundli accent, compact profile rows with rating/price/profile links, and short consultation step selectors with one active preview. All four featured guides and language/tradition links remain available. Secondary approach descriptions and three additional testimonials expand on request through labeled buttons with expanded state; desktop keeps the full content visible. Never shrink touch targets or clamp essential booking information to meet the height budget.

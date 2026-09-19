@@ -16,11 +16,14 @@ Open `http://localhost:3000`. Development, production preview and browser tests 
 ```sh
 npm run typecheck
 npm run lint
+npm run format
 npm test
 npm run build
 npm run start
 npm run test:e2e
 ```
+
+`npm run format` writes Prettier changes. Use `npm run format:check` to verify formatting without writing files.
 
 If Playwright reports a missing browser, run `npx playwright install chromium` before retrying its tests.
 

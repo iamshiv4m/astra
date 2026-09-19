@@ -1,5 +1,24 @@
 import { describe, expect, it } from "vitest";
-import { addDays, bookConsultation, calendarText, createSeed, dateKey, endConsultation, getSlots, joinConsultation, login, money, rateConsultation, replyMessage, retryMessage, saveSchedule, sendMessage, updateAstrologer, updateClient, validateSnapshot } from "../src/lib/domain";
+import {
+  addDays,
+  bookConsultation,
+  calendarText,
+  createSeed,
+  dateKey,
+  endConsultation,
+  getSlots,
+  joinConsultation,
+  login,
+  money,
+  rateConsultation,
+  replyMessage,
+  retryMessage,
+  saveSchedule,
+  sendMessage,
+  updateAstrologer,
+  updateClient,
+  validateSnapshot,
+} from "../src/lib/domain";
 import { createServices } from "../src/services/demo";
 
 const seed = () => createSeed("2026-09-19");
@@ -12,7 +31,9 @@ describe("deterministic shared demo data", () => {
     expect(dateKey(state.now)).toBe("2026-09-19");
     expect(new Date(state.now).toISOString()).toBe("2026-09-19T03:30:00.000Z");
     expect(state.astrologers).toHaveLength(10);
-    expect(state.astrologers.map(advisor => advisor.image)).toEqual(Array.from({ length: 10 }, (_, index) => `/portraits/${index + 1}.jpg`));
+    expect(state.astrologers.map(advisor => advisor.image)).toEqual(
+      Array.from({ length: 10 }, (_, index) => `/portraits/${index + 1}.jpg`)
+    );
     expect(state.bookings).toHaveLength(10);
     expect(state.sessions.filter(s => s.status === "ended")).toHaveLength(5);
     expect(state.messages).toHaveLength(20);
@@ -23,8 +44,14 @@ describe("deterministic shared demo data", () => {
     expect(state.astrologers[1].prices[45]).toBe(199900);
     expect(state.astrologers[2].prices[30]).toBe(99900);
     expect(state.astrologers[0]).toMatchObject({ experience: 12, consultations: 2300 });
-    expect(state.astrologers[1]).toMatchObject({ experience: 15, expertise: expect.arrayContaining(["Career", "Finance"]) });
-    expect(state.astrologers[2]).toMatchObject({ experience: 9, expertise: expect.arrayContaining(["Relationships", "Marriage"]) });
+    expect(state.astrologers[1]).toMatchObject({
+      experience: 15,
+      expertise: expect.arrayContaining(["Career", "Finance"]),
+    });
+    expect(state.astrologers[2]).toMatchObject({
+      experience: 9,
+      expertise: expect.arrayContaining(["Relationships", "Marriage"]),
+    });
     expect(state.astrologers.flatMap(a => getSlots(state, a.id, state.seedDate, 30)).length).toBeGreaterThan(20);
   });
   it("formats calendar dates independently of browser timezone", () => {
@@ -67,16 +94,24 @@ describe("availability and atomic bookings", () => {
     expect(() => bookConsultation(result.state, { ...input, requestId: "two" })).toThrow(/available/i);
     expect(() => bookConsultation({ ...state, scenario: "payment-failure" }, input)).toThrow(/payment/i);
     expect(state.bookings).toHaveLength(10);
-    const edited = updateAstrologer(login(result.state, "astrologer"), "ananya-sharma", { prices: { 30: 200000, 45: 250000, 60: 300000 } });
+    const edited = updateAstrologer(login(result.state, "astrologer"), "ananya-sharma", {
+      prices: { 30: 200000, 45: 250000, 60: 300000 },
+    });
     expect(edited.bookings.at(-1)?.price).toBe(149900);
     expect(() => bookConsultation(seed(), input)).toThrow(/sign in/i);
   });
   it("rejects invalid and booking-conflicting schedule changes", () => {
     const state = login(seed(), "astrologer");
     const schedule = state.schedules[0];
-    expect(() => saveSchedule(state, { ...schedule, windows: [{ day: 1, start: "18:00", end: "09:00" }] })).toThrow(/range|window/i);
-    expect(() => saveSchedule(state, { ...schedule, blocks: [{ date: state.seedDate, start: "10:00", end: "11:00" }] })).toThrow(/booking-6/);
-    expect(() => saveSchedule(state, { ...schedule, overrides: [{ date: state.seedDate, windows: [] }] })).toThrow(/booking/);
+    expect(() => saveSchedule(state, { ...schedule, windows: [{ day: 1, start: "18:00", end: "09:00" }] })).toThrow(
+      /range|window/i
+    );
+    expect(() =>
+      saveSchedule(state, { ...schedule, blocks: [{ date: state.seedDate, start: "10:00", end: "11:00" }] })
+    ).toThrow(/booking-6/);
+    expect(() => saveSchedule(state, { ...schedule, overrides: [{ date: state.seedDate, windows: [] }] })).toThrow(
+      /booking/
+    );
   });
 });
 
@@ -132,7 +167,13 @@ describe("identities and consultation lifecycle", () => {
 describe("storage contracts and service adapters", () => {
   it("migrates only known legacy seed portrait URLs without replacing edited advisor records", () => {
     const state = seed();
-    state.astrologers[0] = { ...state.astrologers[0], image: "/portraits/ananya-sharma.svg", bio: "My edited biography.", name: "Ananya Updated", prices: { 30: 170000, 45: 230000, 60: 290000 } };
+    state.astrologers[0] = {
+      ...state.astrologers[0],
+      image: "/portraits/ananya-sharma.svg",
+      bio: "My edited biography.",
+      name: "Ananya Updated",
+      prices: { 30: 170000, 45: 230000, 60: 290000 },
+    };
     state.astrologers[1].image = "/portraits/custom-raghav.jpg";
     state.astrologers[2].image = "/custom/meera-kapoor.svg";
     const migrated = validateSnapshot(state);
@@ -144,27 +185,47 @@ describe("storage contracts and service adapters", () => {
   });
   it("preserves explicit birth-detail consent without granting it by default", () => {
     const state = seed();
-    const consenting = { ...state, clients: state.clients.map(client => ({ ...client, birthDetailsConsent: client.id === "shivam" })) };
+    const consenting = {
+      ...state,
+      clients: state.clients.map(client => ({ ...client, birthDetailsConsent: client.id === "shivam" })),
+    };
     expect(validateSnapshot(consenting).clients[0]).toMatchObject({ birthDetailsConsent: true });
     expect(validateSnapshot(consenting).clients[1]).toMatchObject({ birthDetailsConsent: false });
     expect(validateSnapshot(state).clients[0]).not.toHaveProperty("birthDetailsConsent");
-    expect(() => validateSnapshot({ ...state, clients: [{ ...state.clients[0], birthDetailsConsent: "yes" }, ...state.clients.slice(1)] })).toThrow();
+    expect(() =>
+      validateSnapshot({
+        ...state,
+        clients: [{ ...state.clients[0], birthDetailsConsent: "yes" }, ...state.clients.slice(1)],
+      })
+    ).toThrow();
   });
   it("accepts linked snapshots and rejects wrong versions, malformed fields, foreign links", () => {
     expect(validateSnapshot(JSON.parse(JSON.stringify(seed())))).toEqual(seed());
     expect(() => validateSnapshot({ ...seed(), version: 2 })).toThrow(/saved|snapshot/i);
     expect(() => validateSnapshot({ ...seed(), now: "yesterday" })).toThrow();
     expect(() => validateSnapshot({ ...seed(), bookings: [{ ...seed().bookings[0], clientId: "missing" }] })).toThrow();
-    expect(() => validateSnapshot({ ...seed(), astrologers: [{ ...seed().astrologers[0], prices: { 30: -1 } }] })).toThrow();
+    expect(() =>
+      validateSnapshot({ ...seed(), astrologers: [{ ...seed().astrologers[0], prices: { 30: -1 } }] })
+    ).toThrow();
   });
   it("service adapters share the same authoritative repository", async () => {
     let state = seed();
-    const services = createServices({ getState: () => state, commit: next => { state = next; } });
+    const services = createServices({
+      getState: () => state,
+      commit: next => {
+        state = next;
+      },
+    });
     await services.auth.login("client");
     expect((await services.profile.currentClient())?.id).toBe("shivam");
     expect(await services.astrologer.list()).toHaveLength(10);
     const slots = await services.availability.slots("ananya-sharma", state.seedDate, 30);
-    const booking = await services.booking.confirm({ astrologerId: "ananya-sharma", duration: 30, start: slots[0].start, requestId: "service" });
+    const booking = await services.booking.confirm({
+      astrologerId: "ananya-sharma",
+      duration: 30,
+      start: slots[0].start,
+      requestId: "service",
+    });
     expect((await services.payment.receipt(booking.id)).simulated).toBe(true);
     await services.session.join(booking.sessionId, true);
     await services.video.toggle(booking.sessionId, "muted");

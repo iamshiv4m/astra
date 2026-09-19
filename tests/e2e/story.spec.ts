@@ -7,7 +7,9 @@ for (const width of [390, 1440]) {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Your next chapter starts with a conversation.");
     await page.getByRole("button", { name: "Relationships", exact: true }).click();
-    await expect(page.getByRole("region", { name: "Your starting point" })).toContainText("Some connections need a new perspective.");
+    await expect(page.getByRole("region", { name: "Your starting point" })).toContainText(
+      "Some connections need a new perspective."
+    );
     await page.getByRole("link", { name: "Find guidance for relationships" }).click();
     await expect(page).toHaveURL("/astrologers?search=Relationships");
     await expect(page.getByRole("searchbox")).toHaveValue("Relationships");
@@ -39,7 +41,9 @@ test("all story choices and consultation preview states stay accessible", async 
       for (const name of names) {
         await page.getByRole(role, { name: new RegExp(name) }).click();
         const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
-        violations.push(...results.violations.map(v => ({ width, state: name, id: v.id, targets: v.nodes.map(n => n.target) })));
+        violations.push(
+          ...results.violations.map(v => ({ width, state: name, id: v.id, targets: v.nodes.map(n => n.target) }))
+        );
       }
     }
   }

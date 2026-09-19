@@ -1,0 +1,27 @@
+.disclosure > button {
+  display: none;
+}
+@media (max-width: 600px) {
+  .disclosure > button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 0;
+    background: transparent;
+    border: 0;
+    border-top: 1px solid var(--line);
+    color: #404a9b;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .disclosure > button span {
+    font-size: 1.2rem;
+  }
+  .content[data-expanded="false"] {
+    display: none;
+  }
+}
